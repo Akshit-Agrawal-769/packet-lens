@@ -31,10 +31,13 @@ Networks send packets instead of large messages
 - data might be smaller than packet size leading to inefficiency
   
 > Achieving the correct packet size.
-> 
->  Smaller packets improve reliability but increase protocol overhead.
+
+> Smaller packets improve reliability but increase protocol overhead.
 Larger packets reduce overhead but make retransmissions more expensive.
 
+## Additional Thoughts
+- difference between differentiable and non-diefferentiable graphs when thinking in terms of channel.
+<br><br>
 # Routing
 
 Packets contain only their **final destination**.
