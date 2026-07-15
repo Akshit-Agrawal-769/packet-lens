@@ -21,7 +21,9 @@ Networks send packets instead of large messages because-
 - Large data chunks are more predictable
 - no problem statement for reordering and arranging packets in the correct order
 - less complexity and channels for data loss
-
+- data might be smaller than packet size leading to inefficiency
+  
+ > Achieving the correct packet size. balancing complexity and reliability
 
 # Routing
 
