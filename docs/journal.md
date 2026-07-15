@@ -47,6 +47,35 @@ This greatly reduces complexity because routers do not need to map the its vaste
 
 **next-hop routing** is what this evolved to become
 
-Engineering Principle:
+## Engineering Principle:
 > Large global systems are often built from many small local decisions.
 Examples include GPS navigation, distributed systems, and Internet routing.
+
+
+# Binary Files
+
+Reading a file does not meant "reading packets."
+The operating system simply returns raw bytes.
+Packets only exist after the parser assigns structure to those bytes.
+Bytes have no inherent meaning.
+The same sequence of bytes could represent
+
+- text
+- an integer
+- an image
+- executable instructions
+- a packet header
+
+Meaning comes from an agreed interpretation.
+
+## Engineering Principle
+>Data and meaning are separate concepts.
+>A parser's job is not to create information.
+>Its job is to correctly interpret existing bytes according to an agreed specification.
+
+## Questions answered
+- Why don't routers store the entire Internet?
+- Why don't packets carry their complete route?
+- Why do computers have multiple identities (IP, MAC, hostname)?
+- Why is a binary file just bytes until interpreted?
+- Why isn't a filename enough to identify a file?
