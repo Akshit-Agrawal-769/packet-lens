@@ -4,8 +4,8 @@ HEADER_SIZE=24
 
 while True:
 
-    choice = input('continue? y/n ')
-    if choice.lower()=='n':
+    choice = input('continue? y/n ').strip().lower()
+    if choice=='n':
         break  
 
     filepath=input('file path: ')
