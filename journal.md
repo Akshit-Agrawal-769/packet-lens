@@ -11,19 +11,29 @@ The goal is not to summarize networking textbooks but to record the reasoning be
 
 # Packets
 
-Networks send packets instead of large messages because-
+Networks send packets instead of large messages
 - small units make communication more reliable and efficient
-- efficient bandwidth usage
-- allow many users to share the same network(avoiding big roadblocks)
-- data corruption can be localised
-- scalable
-### Tradeoff
+
+## Engineering Tradeoffs
+
+### Benefits
+
+- Efficient bandwidth usage
+- Fair sharing among multiple users
+- data corruption localised and easy retransmission
+- Better scalability
+
+### Costs
+
 - Large data chunks are more predictable
 - no problem statement for reordering and arranging packets in the correct order
 - less complexity and channels for data loss
 - data might be smaller than packet size leading to inefficiency
   
- > Achieving the correct packet size. balancing complexity and reliability
+> Achieving the correct packet size.
+> 
+>  Smaller packets improve reliability but increase protocol overhead.
+Larger packets reduce overhead but make retransmissions more expensive.
 
 # Routing
 
@@ -31,8 +41,7 @@ Packets contain only their **final destination**.
 Each router makes only the next forwarding decision based on its own knowledge.
 This greatly reduces complexity because routers do not need a complete map of the Internet.
 
-
-**next-hop routing** is the technical term
+**next-hop routing** is what this evolved to become
 
 Engineering Principle:
 > Large global systems are often built from many small local decisions.
