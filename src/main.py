@@ -1,6 +1,6 @@
 import os
 import time
-HEADER_SIZE=24
+from constants import *
 
 while True:
 
