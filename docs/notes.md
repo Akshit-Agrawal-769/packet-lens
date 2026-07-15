@@ -20,7 +20,6 @@ Networks send packets instead of large messages because-
 ### Tradeoff
 - Large data chunks are more predictable
 - no problem statement for reordering and arranging packets in the correct order
-- 
 
 
 # Routing
@@ -28,7 +27,10 @@ Networks send packets instead of large messages because-
 Packets contain only their **final destination**.
 Each router makes only the next forwarding decision based on its own knowledge.
 This greatly reduces complexity because routers do not need a complete map of the Internet.
+
+
 **next-hop routing** is the technical term
+
 Engineering Principle:
 > Large global systems are often built from many small local decisions.
 Examples include GPS navigation, distributed systems, and Internet routing.
