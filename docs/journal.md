@@ -41,8 +41,9 @@ Larger packets reduce overhead but make retransmissions more expensive.
 # Routing
 
 Packets contain only their **final destination**.
+Graph thinking and BFS implementation becomes terrific due to scalibility.
 Each router makes only the next forwarding decision based on its own knowledge.
-This greatly reduces complexity because routers do not need a complete map of the Internet.
+This greatly reduces complexity because routers do not need to map the its vasteness,the Internet.
 
 **next-hop routing** is what this evolved to become
 
