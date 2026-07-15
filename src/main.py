@@ -29,8 +29,7 @@ while True:
             print("Invalid or incomplete PCAP file.")
             continue
         print(f"Successfully opened {filepath}")
-        print("Read 24-byte global header.")
-        time.sleep(2)
+        
         print('Commencing operation')
         time.sleep(1)
         print('1')
@@ -39,4 +38,7 @@ while True:
         time.sleep(1)
         print('3')
         time.sleep(1)
-        print(data.hex())
+
+        print("Global Header:")
+        for i, byte in enumerate(data):
+            print(f"Byte {i:02}: {byte:02X}")
