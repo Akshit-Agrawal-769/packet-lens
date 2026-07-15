@@ -20,6 +20,7 @@ Networks send packets instead of large messages because-
 ### Tradeoff
 - Large data chunks are more predictable
 - no problem statement for reordering and arranging packets in the correct order
+- less complexity and channels for data loss
 
 
 # Routing
