@@ -1,35 +1,43 @@
 # PacketLens
 
-PacketLens aspires to be an open-source network packet analyzer written in Python.
+A network packet analyzer written in Python, built from scratch.
 
-Its goal is to help students, developers, and security enthusiasts understand network traffic by parsing PCAP files and presenting packet information in a simple, human-readable format.
+PacketLens reads PCAP files and turns raw packet bytes into something you can actually read and reason about — Ethernet frames, IP packets, TCP/UDP traffic, DNS queries, HTTP requests — all broken down in plain, human-readable output.
 
-## Why?
+## Why I'm building this
 
-Packet analyzers like WIreshark exist too provide visibility into what is actually happening on a computer network
+Tools like Wireshark are incredible, but they're also black boxes if you've never looked inside one. I wanted to actually understand how a raw stream of bytes off the wire turns into "this is a TCP packet going from port 51000 to port 443." The only way I know how to really learn that is to build it myself: parse the headers by hand, get the byte offsets wrong a bunch of times, and eventually have something that works.
 
-By building the analyzer from scratch, this project explores how common Internet protocols are structured and how network traffic can be interpreted programmatically.
+So PacketLens is equal parts tool and learning project. If you're a student, a developer curious about networking, or someone getting into security, I'm hoping it's useful to you the same way it's been useful to me — as a hands-on way to see what's actually happening in network traffic instead of just reading about it.
 
----
+## Status
 
-## Planned Features
+🚧 Early days. This is v0.1 and very much a work in progress — expect rough edges, missing features, and APIs that might change as I figure out what actually makes sense.
 
-- Read PCAP files
-- Decode Ethernet frames
-- Decode IPv4 packets
-- Decode TCP segments
-- Decode UDP datagrams
-- Decode DNS packets
-- Decode HTTP requests/responses
-- Protocol statistics
-- Packet filtering
-- JSON export
-- Command-line interface
+## Where things stand
 
----
+- [ ] Read PCAP files
+- [ ] Decode Ethernet frames
+- [ ] Decode IPv4 packets
+- [ ] Decode TCP segments
+- [ ] Decode UDP datagrams
+- [ ] Decode DNS packets
+- [ ] Decode HTTP requests/responses
+- [ ] Protocol statistics
+- [ ] Packet filtering
+- [ ] JSON export
+- [ ] Command-line interface
 
-## Current Status
+Nothing's checked off yet because nothing's shipped yet. This list will get updated as pieces land.
 
-🚧 Under active development.
+## Getting started
 
-Version: v0.1
+There's not a lot to run yet, but once there is:
+
+```bash
+git clone https://github.com/yourusername/packetlens.git
+cd packetlens
+pip install -r requirements.txt
+```
+
+Usage instructions and examples will show up here as the CLI takes shape.
