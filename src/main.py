@@ -1,6 +1,7 @@
 import os
 import time
 from constants import *
+from pcap import *
 
 while True:
 
@@ -22,7 +23,7 @@ while True:
     except PermissionError:
         print("Error: You do not have the required permissions to access this file.")
     except OSError as e:
-        print(f"System Error encountered: {e.strerror}")
+        print(f"System Error encountered: {e}")
 
     else:
         if len(data) < HEADER_SIZE:
@@ -42,3 +43,6 @@ while True:
         print("Global Header:")
         for i, byte in enumerate(data):
             print(f"Byte {i:02}: {byte:02X}")
+
+        magic = parse_magic_number(data)
+        print(magic)
