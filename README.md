@@ -39,5 +39,3 @@ git clone https://github.com/yourusername/packetlens.git
 cd packetlens
 pip install -r requirements.txt
 ```
-
-Usage instructions and examples will show up here as the CLI takes shape.
