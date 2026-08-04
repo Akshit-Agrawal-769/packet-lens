@@ -1,1 +1,0 @@
-HEADER_SIZE=24

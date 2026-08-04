@@ -1,14 +1,13 @@
 import os
 import time
-from constants import *
-from pcap import *
+import p_constants
+from pcap import parse_global_header
 
 while True:
 
     choice = input('continue? y/n ').strip().lower()
     if choice=='n':
         break  
-
     filepath=input('file path: ')
     if not os.path.isfile(filepath):
         print("File not found.")
@@ -16,7 +15,7 @@ while True:
 
     try:
         with open(filepath,'rb') as f:
-            data= f.read(HEADER_SIZE)
+            data= f.read(p_constants.HEADER_SIZE)
 
     except FileNotFoundError:
         print("Error: The requested file could not be found.")
@@ -26,7 +25,7 @@ while True:
         print(f"System Error encountered: {e}")
 
     else:
-        if len(data) < HEADER_SIZE:
+        if len(data) < p_constants.HEADER_SIZE:
             print("Invalid or incomplete PCAP file.")
             continue
         print(f"Successfully opened {filepath}")
@@ -44,5 +43,5 @@ while True:
         for i, byte in enumerate(data):
             print(f"Byte {i:02}: {byte:02X}")
 
-        magic = parse_magic_number(data)
-        print(magic)
+        header = parse_global_header(data)
+        print(header)
