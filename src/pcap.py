@@ -1,6 +1,7 @@
 from models import GlobalHeader, PacketRecord
 import p_constants
 
+
 def parse_global_header(header: bytes):
     
     magic = header[:4]
@@ -19,6 +20,7 @@ def parse_global_header(header: bytes):
 
     return GlobalHeader(endianness,major,minor,reserved1,reserved2,snaplen,linktype)
 
+
 def format_global_header(header: bytes):
     fields = [
         ("Endianness", header.endianness),
@@ -26,6 +28,7 @@ def format_global_header(header: bytes):
         ("Snap Length", f"{header.snaplen} bytes"),
         ("Link Layer", p_constants.LINK_TYPES[header.linktype])]
     return fields
+
 
 def parse_packet_record(header: bytes, endianness: str):
 

@@ -42,8 +42,7 @@ while True:
             time.sleep(1)
 
             print("\nGlobal Header:")
-            for i, byte in enumerate(data):
-                print(f"Byte {i:02}: {byte:02X}")
+            
 
             p_constants.print_banner()
 
