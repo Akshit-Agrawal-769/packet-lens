@@ -1,6 +1,8 @@
 from models import GlobalHeader
 import p_constants
+
 def parse_global_header(header: bytes):
+    
     magic = header[:4]
     endianness = p_constants.PCAP_MAGIC.get(magic)
     if endianness is None:
