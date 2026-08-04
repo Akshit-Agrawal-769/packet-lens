@@ -9,3 +9,11 @@ class GlobalHeader:
     reserved2: int
     snaplen: int
     linktype: int
+
+
+@dataclass
+class PacketRecord:
+    timestamp_seconds: int
+    timestamp_microseconds: int
+    captured_length: int
+    original_length: int
