@@ -42,14 +42,14 @@ while True:
             time.sleep(1)
 
             print("\nGlobal Header:")
-            
+
 
             p_constants.print_banner()
 
             header = parse_global_header(data)
-
-            for key, value in format_global_header(header):
-                print(f"{key:<20}: {value}")
+            if p_constants.DEBUG:
+                for key, value in format_global_header(header):
+                    print(f"{key:<20}: {value}")
 
             print()
 
@@ -82,7 +82,6 @@ while True:
                 for key, value in format_packet_record(packet):
                     print(f"{key:<20}: {value}")
 
-                # Read packet data (we'll parse it later)
                 packet_data = f.read(packet.captured_length)
 
                 print()
