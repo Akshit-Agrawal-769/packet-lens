@@ -1,7 +1,7 @@
 import os
 import time
 import p_constants
-from pcap import parse_global_header
+from pcap import parse_global_header,format_global_header
 
 while True:
 
@@ -43,5 +43,10 @@ while True:
         for i, byte in enumerate(data):
             print(f"Byte {i:02}: {byte:02X}")
 
-        header = parse_global_header(data)
-        print(header)
+        print("=" * 40)
+        print("PacketLens")
+        print("=" * 40)
+
+        header=parse_global_header(data)
+        for key, value in format_global_header(header):
+            print(f"{key:<15}: {value}")

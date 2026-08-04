@@ -18,3 +18,11 @@ def parse_global_header(header: bytes):
     linktype = int.from_bytes(header[20:24],byteorder=endianness)
 
     return GlobalHeader(endianness,major,minor,reserved1,reserved2,snaplen,linktype)
+
+def format_global_header(header):
+    fields = [
+    ("Endianness", header.endianness),
+    ("Version", f"{header.major_version}.{header.minor_version}"),
+    ("Snap Length", f"{header.snaplen} bytes"),
+    ("Link Layer", p_constants.LINK_TYPES[header.linktype])]
+    return fields

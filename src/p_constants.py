@@ -4,3 +4,8 @@ PCAP_MAGIC = {
     bytes.fromhex("d4c3b2a1"): "little",
     bytes.fromhex("a1b2c3d4"): "big",
 }
+
+LINK_TYPES = {
+    1: "Ethernet",
+    105: "IEEE 802.11",
+}
