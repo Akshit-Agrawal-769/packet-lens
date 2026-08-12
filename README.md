@@ -12,7 +12,7 @@ So PacketLens is equal parts tool and learning project. If you're a student, a d
 
 ## Status
 
-🚧 Early days. This is v0.1 and very much a work in progress — expect rough edges, missing features, and APIs that might change as I figure out what actually makes sense.
+🚧 Under development
 
 ## Where things stand
 
