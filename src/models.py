@@ -17,3 +17,9 @@ class PacketRecord:
     timestamp_microseconds: int
     captured_length: int
     original_length: int
+
+@dataclass
+class EthernetFrame:
+    destination_mac: str
+    source_mac: str
+    ethertype: int

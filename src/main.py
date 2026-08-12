@@ -53,7 +53,7 @@ while True:
 
             print()
 
-            # Read every packet
+            packets=[]
             packet_number = 1
 
             while True:
@@ -75,7 +75,7 @@ while True:
                     packet_header,
                     header.endianness,
                 )
-
+                
                 print(f"Packet {packet_number}")
                 print("-" * 30)
 
@@ -83,8 +83,11 @@ while True:
                     print(f"{key:<20}: {value}")
 
                 packet_data = f.read(packet.captured_length)
-
                 print()
+                print(header.linktype)
+                print()
+                print(packet_data.hex())
+                time.sleep(4)
 
                 packet_number += 1
 

@@ -1,4 +1,4 @@
-from models import GlobalHeader, PacketRecord
+from models import GlobalHeader, PacketRecord, EthernetFrame
 import p_constants
 
 
@@ -47,4 +47,21 @@ def format_packet_record(header: bytes):
         ("timestamp_microseconds", header.timestamp_microseconds),
         ("captured_length", header.captured_length),
         ("original_length", header.original_length)]
+    return fields
+
+def parse_ethernet(data):
+    destination = data[:6]
+    source = data[6:12]
+    ethertype = int.from_bytes(data[12:14], byteorder='big')
+
+    destination_mac = ":".join(f"{byte:02x}" for byte in destination)
+    source_mac = ":".join(f"{byte:02x}" for byte in source)
+
+    return EthernetFrame(destination_mac,source_mac,ethertype)
+
+def format_ethernet(data):
+    fields = [
+        ("destination", data.destination_mac)
+        ("source", data.source_mac)
+        ("etherType", data.ethertype)]
     return fields
