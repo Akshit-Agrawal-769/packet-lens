@@ -61,7 +61,7 @@ def parse_ethernet(data):
 
 def format_ethernet(data):
     fields = [
-        ("destination", data.destination_mac)
-        ("source", data.source_mac)
-        ("etherType", data.ethertype)]
+        ("destination", data.destination_mac),
+        ("source", data.source_mac),
+        ("etherType", f"0x{data.ethertype:04x}")]
     return fields

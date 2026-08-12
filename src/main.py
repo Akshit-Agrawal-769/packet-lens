@@ -6,6 +6,8 @@ from pcap import (
     format_global_header,
     parse_packet_record,
     format_packet_record,
+    parse_ethernet,
+    format_ethernet
 )
 
 while True:
@@ -84,11 +86,14 @@ while True:
 
                 packet_data = f.read(packet.captured_length)
                 print()
-                print(header.linktype)
                 print()
-                print(packet_data.hex())
-                time.sleep(4)
+                
+                if header.linktype==1:
+                    EthernetMetdata=parse_ethernet(packet_data)
 
+                    for key, value in format_ethernet(EthernetMetdata):
+                                        print(f"{key:<20}: {value}")
+    
                 packet_number += 1
 
             print(f"Finished reading {packet_number - 1} packets.")
