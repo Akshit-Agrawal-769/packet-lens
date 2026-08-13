@@ -7,7 +7,9 @@ from pcap import (
     parse_packet_record,
     format_packet_record,
     parse_ethernet,
-    format_ethernet
+    format_ethernet,
+    parse_ipv4,
+    format_ipv4
 )
 
 while True:
@@ -92,8 +94,21 @@ while True:
                     EthernetMetdata=parse_ethernet(packet_data)
 
                     for key, value in format_ethernet(EthernetMetdata):
-                                        print(f"{key:<20}: {value}")
-    
+                        print(f"{key:<20}: {value}")
+                    print()
+
+                    if EthernetMetdata.ethertype == 0x0800:
+                        ip_data = packet_data[14:]
+                        ip = parse_ipv4(ip_data)
+
+                        for key, value in format_ipv4(ip):
+                            print(f"{key:<20}: {value}")
+                print()
+                print()
+
+                if p_constants.DEBUG:
+                    time.sleep(3)
+                  
                 packet_number += 1
 
             print(f"Finished reading {packet_number - 1} packets.")

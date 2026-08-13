@@ -1,4 +1,4 @@
-from models import GlobalHeader, PacketRecord, EthernetFrame
+from models import GlobalHeader, PacketRecord, EthernetFrame, IPv4Packet
 import p_constants
 
 
@@ -64,4 +64,53 @@ def format_ethernet(data):
         ("destination", data.destination_mac),
         ("source", data.source_mac),
         ("etherType", f"0x{data.ethertype:04x}")]
+    return fields
+
+def parse_ipv4(data: bytes):
+    version = data[0] >> 4
+    ihl = data[0] & 0x0F
+
+    dscp_ecn = data[1]
+
+    total_length = int.from_bytes(data[2:4], byteorder="big")
+    identification = int.from_bytes(data[4:6], byteorder="big")
+    flags_fragment_offset = int.from_bytes(data[6:8], byteorder="big")
+
+    ttl = data[8]
+    protocol = data[9]
+
+    checksum = int.from_bytes(data[10:12], byteorder="big")
+
+    source_ip = ".".join(str(byte) for byte in data[12:16])
+    destination_ip = ".".join(str(byte) for byte in data[16:20])
+
+    return IPv4Packet(
+        version,
+        ihl,
+        dscp_ecn,
+        total_length,
+        identification,
+        flags_fragment_offset,
+        ttl,
+        protocol,
+        checksum,
+        source_ip,
+        destination_ip
+    )
+
+def format_ipv4(data):
+    fields = [
+        ("version", data.version),
+        ("IHL", data.ihl),
+        ("DSCP/ECN", data.dscp_ecn),
+        ("total length", data.total_length),
+        ("identification", data.identification),
+        ("flags/offset", f"0x{data.flags_fragment_offset:04x}"),
+        ("TTL", data.ttl),
+        ("protocol", data.protocol),
+        ("checksum", f"0x{data.checksum:04x}"),
+        ("source", data.source_ip),
+        ("destination", data.destination_ip)
+    ]
+
     return fields

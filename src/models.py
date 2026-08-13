@@ -23,3 +23,17 @@ class EthernetFrame:
     destination_mac: str
     source_mac: str
     ethertype: int
+
+@dataclass
+class IPv4Packet:
+    version: int
+    ihl: int
+    dscp_ecn: int
+    total_length: int
+    identification: int
+    flags_fragment_offset: int
+    ttl: int
+    protocol: int
+    checksum: int
+    source_ip: str
+    destination_ip: str
