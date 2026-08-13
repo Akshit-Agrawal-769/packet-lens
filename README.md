@@ -18,7 +18,7 @@ So PacketLens is equal parts tool and learning project. If you're a student, a d
 
 - [x] Read PCAP files
 - [x] Decode Ethernet frames
-- [ ] Decode IPv4 packets
+- [x] Decode IPv4 packets
 - [ ] Decode TCP segments
 - [ ] Decode UDP datagrams
 - [ ] Decode DNS packets
