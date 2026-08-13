@@ -37,3 +37,10 @@ class IPv4Packet:
     checksum: int
     source_ip: str
     destination_ip: str
+
+@dataclass
+class UDPSegment:
+    source_port: int
+    destination_port: int
+    length: int
+    checksum: int

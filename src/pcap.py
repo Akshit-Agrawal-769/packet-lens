@@ -1,4 +1,4 @@
-from models import GlobalHeader, PacketRecord, EthernetFrame, IPv4Packet
+from models import GlobalHeader, PacketRecord, EthernetFrame, IPv4Packet, UDPSegment
 import p_constants
 
 
@@ -112,5 +112,26 @@ def format_ipv4(data):
         ("source", data.source_ip),
         ("destination", data.destination_ip)
     ]
+    return fields
 
+def parse_udp(data):
+    source_port = int.from_bytes(data[:2], byteorder='big')
+    destination_port = int.from_bytes(data[2:4], byteorder='big')
+    length = int.from_bytes(data[4:6], byteorder='big')
+    checksum = int.from_bytes(data[6:8], byteorder='big')
+
+    return UDPSegment(
+        source_port,
+        destination_port,
+        length,
+        checksum
+    )
+
+def format_udp(data):
+    fields = [
+        ("source port", data.source_port),
+        ("destination port", data.destination_port),
+        ("length", data.length),
+        ("checksum", f"0x{data.checksum:04x}")
+    ]
     return fields

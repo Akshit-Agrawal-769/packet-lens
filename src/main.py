@@ -9,7 +9,9 @@ from pcap import (
     parse_ethernet,
     format_ethernet,
     parse_ipv4,
-    format_ipv4
+    format_ipv4,
+    parse_udp,
+    format_udp
 )
 
 while True:
@@ -103,12 +105,21 @@ while True:
 
                         for key, value in format_ipv4(ip):
                             print(f"{key:<20}: {value}")
-                print()
+                        print()
+
+                        if ip.protocol == 17:
+                            ip_header_length = ip.ihl * 4
+                            udp_data = packet_data[14 + ip_header_length:]
+                            udp = parse_udp(udp_data)
+
+                            for key, value in format_udp(udp):
+                                print(f"{key:<20}: {value}")
+                            print()
                 print()
 
                 if p_constants.DEBUG:
                     time.sleep(3)
-                  
+                
                 packet_number += 1
 
             print(f"Finished reading {packet_number - 1} packets.")
