@@ -6,13 +6,9 @@ from pcap import (
     format_global_header,
     parse_packet_record,
     format_packet_record,
-    parse_ethernet,
     format_ethernet,
-    parse_ipv4,
     format_ipv4,
-    parse_udp,
     format_udp,
-    parse_tcp,
     format_tcp
 )
 from parser import parse_packet
