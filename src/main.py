@@ -116,7 +116,6 @@ while True:
 
                             for key, value in format_udp(udp):
                                 print(f"{key:<20}: {value}")
-                            print()
 
                         elif ip.protocol == 6:
                             ip_header_length = ip.ihl * 4
@@ -125,8 +124,11 @@ while True:
 
                             for key, value in format_tcp(tcp):
                                 print(f"{key:<20}: {value}")
-                            print()
 
+                        else:
+                            print('Unsupported protocol')
+
+                print()
                 print()
 
                 if p_constants.DEBUG:
