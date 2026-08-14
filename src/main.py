@@ -15,6 +15,7 @@ from pcap import (
     parse_tcp,
     format_tcp
 )
+from parser import parse_packet
 
 while True:
 
