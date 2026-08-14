@@ -11,7 +11,9 @@ from pcap import (
     parse_ipv4,
     format_ipv4,
     parse_udp,
-    format_udp
+    format_udp,
+    parse_tcp,
+    format_tcp
 )
 
 while True:
@@ -115,13 +117,23 @@ while True:
                             for key, value in format_udp(udp):
                                 print(f"{key:<20}: {value}")
                             print()
+
+                        elif ip.protocol == 6:
+                            ip_header_length = ip.ihl * 4
+                            tcp_data = packet_data[14 + ip_header_length:]
+                            tcp = parse_tcp(tcp_data)
+
+                            for key, value in format_tcp(tcp):
+                                print(f"{key:<20}: {value}")
+                            print()
+
                 print()
 
                 if p_constants.DEBUG:
                     time.sleep(3)
                 
                 packet_number += 1
-
+                
             print(f"Finished reading {packet_number - 1} packets.")
 
     except FileNotFoundError:

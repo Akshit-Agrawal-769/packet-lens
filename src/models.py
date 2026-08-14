@@ -44,3 +44,15 @@ class UDPSegment:
     destination_port: int
     length: int
     checksum: int
+
+@dataclass
+class TCPSegment:
+    source_port: int
+    destination_port: int
+    sequence_number: int
+    acknowledgement_number: int
+    data_offset: int
+    flags: int
+    window_size: int
+    checksum: int
+    urgent_pointer: int

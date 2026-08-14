@@ -1,4 +1,4 @@
-from models import GlobalHeader, PacketRecord, EthernetFrame, IPv4Packet, UDPSegment
+from models import GlobalHeader, PacketRecord, EthernetFrame, IPv4Packet, UDPSegment, TCPSegment
 import p_constants
 
 
@@ -134,4 +134,45 @@ def format_udp(data):
         ("length", data.length),
         ("checksum", f"0x{data.checksum:04x}")
     ]
+    return fields
+
+def parse_tcp(data: bytes):
+    source_port = int.from_bytes(data[0:2], byteorder="big")
+    destination_port = int.from_bytes(data[2:4], byteorder="big")
+
+    sequence_number = int.from_bytes(data[4:8], byteorder="big")
+    acknowledgement_number = int.from_bytes(data[8:12], byteorder="big")
+
+    data_offset = data[12] >> 4
+    flags = data[13]
+
+    window_size = int.from_bytes(data[14:16], byteorder="big")
+    checksum = int.from_bytes(data[16:18], byteorder="big")
+    urgent_pointer = int.from_bytes(data[18:20], byteorder="big")
+
+    return TCPSegment(
+        source_port,
+        destination_port,
+        sequence_number,
+        acknowledgement_number,
+        data_offset,
+        flags,
+        window_size,
+        checksum,
+        urgent_pointer
+    )
+
+def format_tcp(data):
+    fields = [
+        ("source port", data.source_port),
+        ("destination port", data.destination_port),
+        ("sequence number", data.sequence_number),
+        ("acknowledgement", data.acknowledgement_number),
+        ("data offset", data.data_offset),
+        ("flags", f"0x{data.flags:02x}"),
+        ("window size", data.window_size),
+        ("checksum", f"0x{data.checksum:04x}"),
+        ("urgent pointer", data.urgent_pointer)
+    ]
+
     return fields
