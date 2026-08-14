@@ -95,42 +95,30 @@ while True:
                 print()
                 print()
                 
-                if header.linktype==1:
-                    EthernetMetdata=parse_ethernet(packet_data)
+                if header.linktype == 1:
 
-                    for key, value in format_ethernet(EthernetMetdata):
-                        print(f"{key:<20}: {value}")
-                    print()
+                    layers = parse_packet(packet_data)
+                    for layer in layers:
 
-                    if EthernetMetdata.ethertype == 0x0800:
-                        ip_data = packet_data[14:]
-                        ip = parse_ipv4(ip_data)
+                        if type(layer).__name__ == "EthernetFrame":
+                            fields = format_ethernet(layer)
 
-                        for key, value in format_ipv4(ip):
-                            print(f"{key:<20}: {value}")
-                        print()
+                        elif type(layer).__name__ == "IPv4Packet":
+                            fields = format_ipv4(layer)
 
-                        if ip.protocol == 17:
-                            ip_header_length = ip.ihl * 4
-                            udp_data = packet_data[14 + ip_header_length:]
-                            udp = parse_udp(udp_data)
+                        elif type(layer).__name__ == "UDPSegment":
+                            fields = format_udp(layer)
 
-                            for key, value in format_udp(udp):
-                                print(f"{key:<20}: {value}")
-
-                        elif ip.protocol == 6:
-                            ip_header_length = ip.ihl * 4
-                            tcp_data = packet_data[14 + ip_header_length:]
-                            tcp = parse_tcp(tcp_data)
-
-                            for key, value in format_tcp(tcp):
-                                print(f"{key:<20}: {value}")
+                        elif type(layer).__name__ == "TCPSegment":
+                            fields = format_tcp(layer)
 
                         else:
-                            print('Unsupported protocol')
+                            continue
 
-                print()
-                print()
+                        for key, value in fields:
+                            print(f"{key:<20}: {value}")
+
+                        print()
 
                 if p_constants.DEBUG:
                     time.sleep(3)
