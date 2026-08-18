@@ -37,7 +37,20 @@ while True:
             if filter_protocol not in ("all", "tcp", "udp"):
                 print("Invalid filter.")
                 continue
-            filter_port = input("Filter port ")
+            filter_port = input("Port filter (leave empty for any): ").strip()
+            if filter_port == "":
+                filter_port = None
+            else:
+                try:
+                    filter_port = int(filter_port)
+
+                    if not 0 <= filter_port <= 65535:
+                        print('Invalid port ')
+                        continue
+
+                except ValueError:
+                    print('give a number -_- ')
+                    continue
 
             # Read Global Header
             data = f.read(p_constants.HEADER_SIZE)
@@ -104,43 +117,45 @@ while True:
                     layers = parse_packet(packet_data)
                     protocol = get_protocol(layers)
 
-                    if matches_filter(layers, filter_protocol, filter_port):
+                    if not matches_filter(layers, filter_protocol, filter_port):
+                        packet_number+=1
+                        continue
 
-                        print(f"Packet {packet_number}")
-                        print("-" * 30)
-        
-                        for key, value in format_packet_record(packet):
+                    print(f"Packet {packet_number}")
+                    print("-" * 30)
+    
+                    for key, value in format_packet_record(packet):
+                        print(f"{key:<20}: {value}")
+                    print()
+                    print()
+
+                    print(summarize_packet(layers))
+                    print()
+
+                    for layer in layers:
+
+                        if type(layer).__name__ == "EthernetFrame":
+                            fields = format_ethernet(layer)
+
+                        elif type(layer).__name__ == "IPv4Packet":
+                            fields = format_ipv4(layer)
+
+                        elif type(layer).__name__ == "UDPSegment":
+                            fields = format_udp(layer)
+
+                        elif type(layer).__name__ == "TCPSegment":
+                            fields = format_tcp(layer)
+
+                        else:
+                            continue
+
+                        for key, value in fields:
                             print(f"{key:<20}: {value}")
-                        print()
-                        print()
 
-                        print(summarize_packet(layers))
                         print()
 
-                        for layer in layers:
-
-                            if type(layer).__name__ == "EthernetFrame":
-                                fields = format_ethernet(layer)
-
-                            elif type(layer).__name__ == "IPv4Packet":
-                                fields = format_ipv4(layer)
-
-                            elif type(layer).__name__ == "UDPSegment":
-                                fields = format_udp(layer)
-
-                            elif type(layer).__name__ == "TCPSegment":
-                                fields = format_tcp(layer)
-
-                            else:
-                                continue
-
-                            for key, value in fields:
-                                print(f"{key:<20}: {value}")
-
-                            print()
-
-                        if p_constants.DEBUG:
-                            time.sleep(3)
+                    if p_constants.DEBUG:
+                        time.sleep(3)
                 
                 packet_number += 1
                 
