@@ -96,8 +96,17 @@ while True:
 
 
             print()
-            print(f"{'No.':<6}{'Protocol':<10}{'Source':<25}{'Destination':<25}{'Info'}")
-            print("-" * 85)
+            print(
+                f"{'No.':<6}"
+                f"{'Time':<18}"
+                f"{'Protocol':<10}"
+                f"{'Source':<25}"
+                f"{'Destination':<25}"
+                f"{'Length':<8}"
+                f"{'Info'}"
+            )
+
+            print("-" * 110)
 
             while True:
 
@@ -133,12 +142,18 @@ while True:
                         packet_number+=1
                         continue
 
+                    timestamp = (
+                    packet.timestamp_seconds
+                    + packet.timestamp_microseconds / 1_000_000)
+
                     summary = summarize_packet(layers)
                     print(
                         f'{packet_number:<6}'
+                        f'{timestamp:<18.6f}'
                         f'{summary['protocol']:<10}'
                         f'{summary['source']:<25}'
                         f'{summary['destination']:<25}'
+                        f'{packet.captured_length:<8}'
                         f'{summary['info']}'
                     )
 
