@@ -39,6 +39,29 @@ def parse_packet(data):
 
     return layers
 
+def get_tcp_flags(flags):
+
+    flag_names = []
+
+    if flags & 0x01:
+        flag_names.append("FIN")
+    if flags & 0x02:
+        flag_names.append("SYN")
+    if flags & 0x04:
+        flag_names.append("RST")
+    if flags & 0x08:
+        flag_names.append("PSH")
+    if flags & 0x10:
+        flag_names.append("ACK")
+    if flags & 0x20:
+        flag_names.append("URG")
+    if flags & 0x40:
+        flag_names.append("ECE")
+    if flags & 0x80:
+        flag_names.append("CWR")
+
+    return flag_names
+
 
 def summarize_packet(layers):
 
@@ -59,10 +82,15 @@ def summarize_packet(layers):
         return 'Unknown Packet'
 
     if tcp is not None:
+        flag=get_tcp_flags(tcp.flags)
+        flag_out=''
+        if flag:
+            flag_out=f' [{', '.join(flag)}]'
         return (
             f'TCP  '
             f'{ip.source_ip}:{tcp.source_port} -> '
             f'{ip.destination_ip}:{tcp.destination_port}'
+            f'{flag_out}'
         )
 
     if udp is not None:
@@ -88,6 +116,7 @@ def get_protocol(layers):
     return "OTHER"
 
 def matches_filter(layers,protocol_filter,port_filter=None):
+
     protocol=get_protocol(layers)
 
     if protocol_filter !='all':
