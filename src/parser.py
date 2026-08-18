@@ -5,6 +5,8 @@ from pcap import (
     parse_tcp
 )
 
+from models import IPv4Packet, UDPSegment, TCPSegment
+
 
 def parse_packet(data):
     layers = []
@@ -36,3 +38,41 @@ def parse_packet(data):
         layers.append(udp)
 
     return layers
+
+
+def summarize_packet(layers):
+
+    ip = None
+    tcp = None
+    udp = None
+
+    for layer in layers:
+
+        if isinstance(layer, IPv4Packet):
+            ip = layer
+        elif isinstance(layer, TCPSegment):
+            tcp = layer
+        elif isinstance(layer, UDPSegment):
+            udp = layer
+
+    if ip is None:
+        return 'Unknown Packet'
+
+    if tcp is not None:
+        return (
+            f'TCP  '
+            f'{ip.source_ip}:{tcp.source_port} -> '
+            f'{ip.destination_ip}:{tcp.destination_port}'
+        )
+
+    if udp is not None:
+        return (
+            f'UDP  '
+            f'{ip.source_ip}:{udp.source_port} -> '
+            f'{ip.destination_ip}:{udp.destination_port}'
+        )
+
+    return (
+        f'IPv4  '
+        f'{ip.source_ip} -> {ip.destination_ip}'
+    )

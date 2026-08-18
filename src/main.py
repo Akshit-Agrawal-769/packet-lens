@@ -11,7 +11,10 @@ from pcap import (
     format_udp,
     format_tcp
 )
-from parser import parse_packet
+from parser import (
+     parse_packet,
+     summarize_packet
+     )
 
 while True:
 
@@ -94,6 +97,10 @@ while True:
                 if header.linktype == 1:
 
                     layers = parse_packet(packet_data)
+
+                    print(summarize_packet(layers))
+                    print()
+                    
                     for layer in layers:
 
                         if type(layer).__name__ == "EthernetFrame":
