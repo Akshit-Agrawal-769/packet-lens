@@ -24,7 +24,7 @@ So PacketLens is equal parts tool and learning project. If you're a student, a d
 - [ ] Decode DNS packets
 - [ ] Decode HTTP requests/responses
 - [ ] Protocol statistics
-- [ ] Packet filtering
+- [x] Packet filtering
 - [ ] JSON export
 - [ ] Command-line interface
 
