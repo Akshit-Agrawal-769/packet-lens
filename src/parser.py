@@ -86,3 +86,25 @@ def get_protocol(layers):
             return "UDP"
 
     return "OTHER"
+
+def matches_filter(layers,protocol_filter,port_filter=None):
+    protocol=get_protocol(layers)
+
+    if protocol_filter !='all':
+        if protocol.lower()!=protocol_filter:
+            return False
+
+    if port_filter is not None:
+        for layer in layers:
+            if isinstance(layer,TCPSegment):
+                if(layer.source_port != port_filter
+                    and layer.destination_port != port_filter):
+                    return False
+                return True
+            elif isinstance(layer,UDPSegment):
+                if(layer.source_port != port_filter
+                    and layer.destination_port != port_filter):
+                    return False
+                return True
+        return False
+    return True

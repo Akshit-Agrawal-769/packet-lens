@@ -14,7 +14,8 @@ from pcap import (
 from parser import (
      parse_packet,
      summarize_packet,
-     get_protocol
+     get_protocol,
+     matches_filter
      )
 
 while True:
@@ -32,10 +33,11 @@ while True:
     try:
         with open(filepath, "rb") as f:
 
-            filter_choice = input("Filter (all/tcp/udp): ").strip().lower()
-            if filter_choice not in ("all", "tcp", "udp"):
+            filter_protocol = input("Filter (all/tcp/udp): ").strip().lower()
+            if filter_protocol not in ("all", "tcp", "udp"):
                 print("Invalid filter.")
                 continue
+            filter_port = input("Filter port ")
 
             # Read Global Header
             data = f.read(p_constants.HEADER_SIZE)
@@ -102,7 +104,7 @@ while True:
                     layers = parse_packet(packet_data)
                     protocol = get_protocol(layers)
 
-                    if filter_choice == 'all' or protocol.lower() == filter_choice:
+                    if matches_filter(layers, filter_protocol, filter_port):
 
                         print(f"Packet {packet_number}")
                         print("-" * 30)
