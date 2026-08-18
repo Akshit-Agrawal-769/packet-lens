@@ -14,7 +14,6 @@ from pcap import (
 from parser import (
      parse_packet,
      summarize_packet,
-     get_protocol,
      matches_filter
      )
 
@@ -115,7 +114,6 @@ while True:
                 if header.linktype == 1:
 
                     layers = parse_packet(packet_data)
-                    protocol = get_protocol(layers)
 
                     if not matches_filter(layers, filter_protocol, filter_port):
                         packet_number+=1
