@@ -141,7 +141,6 @@ while True:
                         f'{summary['destination']:<25}'
                         f'{summary['info']}'
                     )
-                    print()
 
                     if p_constants.DEBUG:
                         time.sleep(3)
