@@ -76,3 +76,13 @@ def summarize_packet(layers):
         f'IPv4  '
         f'{ip.source_ip} -> {ip.destination_ip}'
     )
+
+def get_protocol(layers):
+
+    for layer in layers:
+        if isinstance(layer, TCPSegment):
+            return "TCP"
+        elif isinstance(layer, UDPSegment):
+            return "UDP"
+
+    return "OTHER"

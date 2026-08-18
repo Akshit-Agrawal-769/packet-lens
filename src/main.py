@@ -13,7 +13,8 @@ from pcap import (
 )
 from parser import (
      parse_packet,
-     summarize_packet
+     summarize_packet,
+     get_protocol
      )
 
 while True:
@@ -31,6 +32,11 @@ while True:
     try:
         with open(filepath, "rb") as f:
 
+            filter_choice = input("Filter (all/tcp/udp): ").strip().lower()
+            if filter_choice not in ("all", "tcp", "udp"):
+                print("Invalid filter.")
+                continue
+
             # Read Global Header
             data = f.read(p_constants.HEADER_SIZE)
 
@@ -40,14 +46,15 @@ while True:
 
             print(f"Successfully opened {filepath}")
 
-            print("Commencing operation")
-            time.sleep(1)
-            print("1")
-            time.sleep(1)
-            print("2")
-            time.sleep(1)
-            print("3")
-            time.sleep(1)
+            if p_constants.DEBUG:
+                print("Commencing operation")
+                time.sleep(1)
+                print("1")
+                time.sleep(1)
+                print("2")
+                time.sleep(1)
+                print("3")
+                time.sleep(1)
 
             print("\nGlobal Header:")
 
@@ -83,45 +90,52 @@ while True:
                     packet_header,
                     header.endianness,
                 )
-                
-                print(f"Packet {packet_number}")
-                print("-" * 30)
-
-                for key, value in format_packet_record(packet):
-                    print(f"{key:<20}: {value}")
 
                 packet_data = f.read(packet.captured_length)
-                print()
-                print()
+
+                if len(packet_data) < packet.captured_length:
+                    print("Incomplete packet data.")
+                    break
                 
                 if header.linktype == 1:
 
                     layers = parse_packet(packet_data)
+                    protocol = get_protocol(layers)
 
-                    print(summarize_packet(layers))
-                    print()
-                    
-                    for layer in layers:
+                    if filter_choice == 'all' or protocol.lower() == filter_choice:
 
-                        if type(layer).__name__ == "EthernetFrame":
-                            fields = format_ethernet(layer)
-
-                        elif type(layer).__name__ == "IPv4Packet":
-                            fields = format_ipv4(layer)
-
-                        elif type(layer).__name__ == "UDPSegment":
-                            fields = format_udp(layer)
-
-                        elif type(layer).__name__ == "TCPSegment":
-                            fields = format_tcp(layer)
-
-                        else:
-                            continue
-
-                        for key, value in fields:
+                        print(f"Packet {packet_number}")
+                        print("-" * 30)
+        
+                        for key, value in format_packet_record(packet):
                             print(f"{key:<20}: {value}")
-
                         print()
+                        print()
+
+                        print(summarize_packet(layers))
+                        print()
+
+                        for layer in layers:
+
+                            if type(layer).__name__ == "EthernetFrame":
+                                fields = format_ethernet(layer)
+
+                            elif type(layer).__name__ == "IPv4Packet":
+                                fields = format_ipv4(layer)
+
+                            elif type(layer).__name__ == "UDPSegment":
+                                fields = format_udp(layer)
+
+                            elif type(layer).__name__ == "TCPSegment":
+                                fields = format_tcp(layer)
+
+                            else:
+                                continue
+
+                            for key, value in fields:
+                                print(f"{key:<20}: {value}")
+
+                            print()
 
                 if p_constants.DEBUG:
                     time.sleep(3)
