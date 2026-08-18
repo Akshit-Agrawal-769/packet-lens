@@ -17,6 +17,15 @@ from parser import (
      matches_filter
      )
 
+from models import (
+    GlobalHeader, 
+    PacketRecord, 
+    EthernetFrame, 
+    IPv4Packet, 
+    UDPSegment, 
+    TCPSegment
+    )
+
 while True:
 
     choice = input("continue? y/n ").strip().lower()
@@ -132,16 +141,16 @@ while True:
 
                     for layer in layers:
 
-                        if type(layer).__name__ == "EthernetFrame":
+                        if isinstance(layer,EthernetFrame):
                             fields = format_ethernet(layer)
 
-                        elif type(layer).__name__ == "IPv4Packet":
+                        elif isinstance(layer,IPv4Packet):
                             fields = format_ipv4(layer)
 
-                        elif type(layer).__name__ == "UDPSegment":
+                        elif isinstance(layer,UDPSegment):
                             fields = format_udp(layer)
 
-                        elif type(layer).__name__ == "TCPSegment":
+                        elif isinstance(layer,TCPSegment):
                             fields = format_tcp(layer)
 
                         else:

@@ -1,4 +1,11 @@
-from models import GlobalHeader, PacketRecord, EthernetFrame, IPv4Packet, UDPSegment, TCPSegment
+from models import (
+    GlobalHeader, 
+    PacketRecord, 
+    EthernetFrame, 
+    IPv4Packet, 
+    UDPSegment, 
+    TCPSegment
+    )
 import p_constants
 
 
