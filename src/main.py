@@ -137,8 +137,8 @@ while True:
 
                             print()
 
-                if p_constants.DEBUG:
-                    time.sleep(3)
+                        if p_constants.DEBUG:
+                            time.sleep(3)
                 
                 packet_number += 1
                 
