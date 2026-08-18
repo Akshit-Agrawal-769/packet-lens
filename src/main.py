@@ -91,7 +91,7 @@ while True:
 
             print()
 
-            packets=[]
+            matched_packets=[]
             packet_number = 1
 
 
@@ -142,6 +142,9 @@ while True:
                         packet_number+=1
                         continue
 
+                    matched_packets.append(
+                    (packet_number, packet, layers))
+
                     timestamp = (
                     packet.timestamp_seconds
                     + packet.timestamp_microseconds / 1_000_000)
@@ -158,10 +161,75 @@ while True:
                     )
 
                     if p_constants.DEBUG:
-                        time.sleep(3)
+                        time.sleep(1)
                 
                 packet_number += 1
-                
+
+            while True:
+
+                choice = input(
+                    "\nEnter packet number for details "
+                    "(or press Enter to continue): ").strip()
+
+                if choice == "":
+                    break
+
+                try:
+                    selected_number = int(choice)
+                except ValueError:
+                    print("Give me a packet number -_-")
+                    continue
+
+                selected_packet = None
+
+                for number, packet, layers in matched_packets:
+                    if number == selected_number:
+                        selected_packet = (packet, layers)
+                        break
+
+                if selected_packet is None:
+                    print("That packet isn't in the displayed results.")
+                    continue
+
+                packet, layers = selected_packet
+
+                print()
+                print("=" * 50)
+                print(f"Packet {selected_number}")
+                print("=" * 50)
+
+                print("\nPacket Record")
+                print("-" * 30)
+
+                for key, value in format_packet_record(packet):
+                    print(f"{key:<25}: {value}")
+
+                print()
+
+                for layer in layers:
+
+                    if isinstance(layer, EthernetFrame):
+                        fields = format_ethernet(layer)
+
+                    elif isinstance(layer, IPv4Packet):
+                        fields = format_ipv4(layer)
+
+                    elif isinstance(layer, UDPSegment):
+                        fields = format_udp(layer)
+
+                    elif isinstance(layer, TCPSegment):
+                        fields = format_tcp(layer)
+                    else:
+                        continue
+
+                    print(type(layer).__name__)
+                    print("-" * 30)
+
+                    for key, value in fields:
+                        print(f"{key:<25}: {value}")
+
+                    print()
+            
             print(f"Finished reading {packet_number - 1} packets.")
 
     except FileNotFoundError:
