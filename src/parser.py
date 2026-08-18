@@ -79,31 +79,38 @@ def summarize_packet(layers):
             udp = layer
 
     if ip is None:
-        return 'Unknown Packet'
+         return {
+            "protocol": "OTHER",
+            "source": "-",
+            "destination": "-",
+            "info": "Unknown Packet"
+        }
 
     if tcp is not None:
         flag=get_tcp_flags(tcp.flags)
         flag_out=''
         if flag:
             flag_out=f' [{', '.join(flag)}]'
-        return (
-            f'TCP  '
-            f'{ip.source_ip}:{tcp.source_port} -> '
-            f'{ip.destination_ip}:{tcp.destination_port}'
-            f'{flag_out}'
-        )
+        return {
+            'protocol': 'TCP',
+            'source': f'{ip.source_ip}:{tcp.source_port}',
+            'destination': f'{ip.destination_ip}:{tcp.destination_port}',
+            'info': f'{flag_out}'}
 
     if udp is not None:
-        return (
-            f'UDP  '
-            f'{ip.source_ip}:{udp.source_port} -> '
-            f'{ip.destination_ip}:{udp.destination_port}'
-        )
+        return {
+            'protocol': 'UDP',
+            'source': f'{ip.source_ip}:{udp.source_port}',
+            'destination': f'{ip.destination_ip}:{udp.destination_port}',
+            'info': ''
+        }
 
-    return (
-        f'IPv4  '
-        f'{ip.source_ip} -> {ip.destination_ip}'
-    )
+    return {
+        'protocol': 'IPv4',
+        'source': ip.source_ip,
+        'desintaion': ip.destination_ip,
+        'info': ''
+    }
 
 def get_protocol(layers):
 

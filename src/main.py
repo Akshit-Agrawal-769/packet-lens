@@ -94,6 +94,11 @@ while True:
             packets=[]
             packet_number = 1
 
+
+            print()
+            print(f"{'No.':<6}{'Protocol':<10}{'Source':<25}{'Destination':<25}{'Info'}")
+            print("-" * 85)
+
             while True:
 
                 packet_header = f.read(
@@ -128,38 +133,15 @@ while True:
                         packet_number+=1
                         continue
 
-                    print(f"Packet {packet_number}")
-                    print("-" * 30)
-    
-                    for key, value in format_packet_record(packet):
-                        print(f"{key:<20}: {value}")
+                    summary = summarize_packet(layers)
+                    print(
+                        f'{packet_number:<6}'
+                        f'{summary['protocol']:<10}'
+                        f'{summary['source']:<25}'
+                        f'{summary['destination']:<25}'
+                        f'{summary['info']}'
+                    )
                     print()
-                    print()
-
-                    print(summarize_packet(layers))
-                    print()
-
-                    for layer in layers:
-
-                        if isinstance(layer,EthernetFrame):
-                            fields = format_ethernet(layer)
-
-                        elif isinstance(layer,IPv4Packet):
-                            fields = format_ipv4(layer)
-
-                        elif isinstance(layer,UDPSegment):
-                            fields = format_udp(layer)
-
-                        elif isinstance(layer,TCPSegment):
-                            fields = format_tcp(layer)
-
-                        else:
-                            continue
-
-                        for key, value in fields:
-                            print(f"{key:<20}: {value}")
-
-                        print()
 
                     if p_constants.DEBUG:
                         time.sleep(3)
