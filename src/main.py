@@ -17,9 +17,8 @@ from parser import (
      matches_filter
      )
 
-from models import (
-    GlobalHeader, 
-    PacketRecord, 
+from models import ( 
+    Packet, 
     EthernetFrame, 
     IPv4Packet, 
     UDPSegment, 
@@ -143,7 +142,7 @@ while True:
                         continue
 
                     matched_packets.append(
-                    (packet_number, packet, layers))
+                        Packet(packet_number, packet, layers))
 
                     timestamp = (
                     packet.timestamp_seconds
@@ -182,16 +181,17 @@ while True:
 
                 selected_packet = None
 
-                for number, packet, layers in matched_packets:
-                    if number == selected_number:
-                        selected_packet = (packet, layers)
+                for item in matched_packets:
+                    if item.number == selected_number:
+                        selected_packet = item
                         break
 
                 if selected_packet is None:
                     print("That packet isn't in the displayed results.")
                     continue
 
-                packet, layers = selected_packet
+                packet = selected_packet.record
+                layers = selected_packet.layers
 
                 print()
                 print("=" * 50)

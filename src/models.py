@@ -19,6 +19,12 @@ class PacketRecord:
     original_length: int
 
 @dataclass
+class Packet:
+    number: int
+    record: PacketRecord
+    layers: list
+
+@dataclass
 class EthernetFrame:
     destination_mac: str
     source_mac: str
