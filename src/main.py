@@ -9,7 +9,8 @@ from pcap import (
     format_ethernet,
     format_ipv4,
     format_udp,
-    format_tcp
+    format_tcp,
+    format_dns
 )
 from parser import (
      parse_packet,
@@ -216,6 +217,9 @@ while True:
 
                     elif isinstance(layer, UDPSegment):
                         fields = format_udp(layer)
+
+                    elif type(layer).__name__ == "DNSMessage":
+                        fields = format_dns(layer)
 
                     elif isinstance(layer, TCPSegment):
                         fields = format_tcp(layer)

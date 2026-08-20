@@ -225,3 +225,18 @@ def parse_dns(data):
         qtype,
         qclass
     )
+
+def format_dns(data):
+    fields = [
+        ("transaction ID", f"0x{data.transaction_id:04x}"),
+        ("flags", f"0x{data.flags:04x}"),
+        ("questions", data.questions),
+        ("answers", data.answers),
+        ("authority records", data.authority_records),
+        ("additional records", data.additional_records),
+        ("query name", data.query_name),
+        ("query type", data.query_type),
+        ("query class", data.query_class)
+    ]
+
+    return fields

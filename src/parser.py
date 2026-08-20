@@ -2,10 +2,11 @@ from pcap import (
     parse_ethernet,
     parse_ipv4,
     parse_udp,
-    parse_tcp
+    parse_tcp,
+    parse_dns
 )
 
-from models import IPv4Packet, UDPSegment, TCPSegment
+from models import IPv4Packet, UDPSegment, TCPSegment, DNSMessage
 
 
 def parse_packet(data):
@@ -36,6 +37,10 @@ def parse_packet(data):
     elif ipv4.protocol == 17:
         udp = parse_udp(transport_data)
         layers.append(udp)
+        #DNS
+        if udp.source_port == 53 or udp.destination_port == 53:
+            dns = parse_dns(transport_data[8:])
+            layers.append(dns)
 
     return layers
 
@@ -68,6 +73,7 @@ def summarize_packet(layers):
     ip = None
     tcp = None
     udp = None
+    dns=None
 
     for layer in layers:
 
@@ -77,6 +83,8 @@ def summarize_packet(layers):
             tcp = layer
         elif isinstance(layer, UDPSegment):
             udp = layer
+        elif isinstance(layer, DNSMessage):
+            dns=layer
 
     if ip is None:
          return {
@@ -97,18 +105,26 @@ def summarize_packet(layers):
             'destination': f'{ip.destination_ip}:{tcp.destination_port}',
             'info': f'{flag_out}'}
 
-    if udp is not None:
+    if dns is not None:
         return {
-            'protocol': 'UDP',
+            'protocol': 'DNS',
             'source': f'{ip.source_ip}:{udp.source_port}',
             'destination': f'{ip.destination_ip}:{udp.destination_port}',
-            'info': ''
+            'info': f'Query: {dns.query_name}'
         }
+
+    if udp is not None:
+            return {
+                'protocol': 'UDP',
+                'source': f'{ip.source_ip}:{udp.source_port}',
+                'destination': f'{ip.destination_ip}:{udp.destination_port}',
+                'info': ''
+            }
 
     return {
         'protocol': 'IPv4',
         'source': ip.source_ip,
-        'desintaion': ip.destination_ip,
+        'destination': ip.destination_ip,
         'info': ''
     }
 
