@@ -225,10 +225,3 @@ def parse_dns(data):
         qtype,
         qclass
     )
-dns_data = bytes.fromhex(
-    "12340100000100000000000006676f6f676c6503636f6d0000010001"
-)
-
-dns = parse_dns(dns_data)
-
-print(dns)
