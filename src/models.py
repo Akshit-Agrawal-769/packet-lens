@@ -71,3 +71,7 @@ class DNSMessage:
     answers: int
     authority_records: int
     additional_records: int
+
+    query_name: str
+    query_type: int
+    query_class: int

@@ -186,6 +186,7 @@ def format_tcp(data):
     return fields
 
 def parse_dns(data):
+
     if len(data) < 12:
         raise ValueError('Incomplete DNS header')
     transaction_id = int.from_bytes(data[:2], byteorder='big')
@@ -193,7 +194,25 @@ def parse_dns(data):
     questions = int.from_bytes(data[4:6], byteorder='big')
     answers = int.from_bytes(data[6:8], byteorder='big')
     authority_records = int.from_bytes(data[8:10], byteorder='big')
-    additional_records = int.from_bytes(data[10:], byteorder='big')
+    additional_records = int.from_bytes(data[10:12], byteorder='big')
+
+    if questions > 0:
+        qname = ''
+        qtype = 0
+        qclass = 0
+        i=0
+        while data[12+i]!=0:
+            j=0
+            if i!=0:
+                qname+='.'
+            l = data[12+i]
+            for j in range(l):
+                qname+=chr(data[13+i+j])
+            i+=l+1
+            
+        qtype=int.from_bytes(data[13+i:15+i], byteorder='big')
+        qclass=int.from_bytes(data[15+i:17+i], byteorder='big')
+
 
     return DNSMessage(
         transaction_id,
@@ -201,5 +220,15 @@ def parse_dns(data):
         questions,
         answers,
         authority_records,
-        additional_records
+        additional_records,
+        qname,
+        qtype,
+        qclass
     )
+dns_data = bytes.fromhex(
+    "12340100000100000000000006676f6f676c6503636f6d0000010001"
+)
+
+dns = parse_dns(dns_data)
+
+print(dns)
