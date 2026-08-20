@@ -62,3 +62,12 @@ class TCPSegment:
     window_size: int
     checksum: int
     urgent_pointer: int
+
+@dataclass
+class DNSMessage:
+    transaction_id: int
+    flags: int
+    questions: int
+    answers: int
+    authority_records: int
+    additional_records: int

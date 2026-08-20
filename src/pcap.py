@@ -4,7 +4,8 @@ from models import (
     EthernetFrame, 
     IPv4Packet, 
     UDPSegment, 
-    TCPSegment
+    TCPSegment,
+    DNSMessage
     )
 import p_constants
 
@@ -48,7 +49,7 @@ def parse_packet_record(header: bytes, endianness: str):
     return PacketRecord(seconds,microseconds,length,length_O)
 
 
-def format_packet_record(header: bytes):
+def format_packet_record(header):
     fields = [
         ("timestamp_seconds", header.timestamp_seconds),
         ("timestamp_microseconds", header.timestamp_microseconds),
@@ -73,7 +74,7 @@ def format_ethernet(data):
         ("etherType", f"0x{data.ethertype:04x}")]
     return fields
 
-def parse_ipv4(data: bytes):
+def parse_ipv4(data):
     version = data[0] >> 4
     ihl = data[0] & 0x0F
 
@@ -143,7 +144,7 @@ def format_udp(data):
     ]
     return fields
 
-def parse_tcp(data: bytes):
+def parse_tcp(data):
     source_port = int.from_bytes(data[0:2], byteorder="big")
     destination_port = int.from_bytes(data[2:4], byteorder="big")
 
@@ -183,3 +184,22 @@ def format_tcp(data):
     ]
 
     return fields
+
+def parse_dns(data):
+    if len(data) < 12:
+        raise ValueError('Incomplete DNS header')
+    transaction_id = int.from_bytes(data[:2], byteorder='big')
+    flags = int.from_bytes(data[2:4], byteorder='big')
+    questions = int.from_bytes(data[4:6], byteorder='big')
+    answers = int.from_bytes(data[6:8], byteorder='big')
+    authority_records = int.from_bytes(data[8:10], byteorder='big')
+    additional_records = int.from_bytes(data[10:], byteorder='big')
+
+    return DNSMessage(
+        transaction_id,
+        flags,
+        questions,
+        answers,
+        authority_records,
+        additional_records
+    )
