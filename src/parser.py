@@ -3,7 +3,8 @@ from pcap import (
     parse_ipv4,
     parse_udp,
     parse_tcp,
-    parse_dns
+    parse_dns,
+    get_dns_message_type,
 )
 
 from models import IPv4Packet, UDPSegment, TCPSegment, DNSMessage
@@ -73,7 +74,7 @@ def summarize_packet(layers):
     ip = None
     tcp = None
     udp = None
-    dns=None
+    dns = None
 
     for layer in layers:
 
@@ -106,11 +107,12 @@ def summarize_packet(layers):
             'info': f'{flag_out}'}
 
     if dns is not None:
+        msg_type = get_dns_message_type(dns.flags)
         return {
             'protocol': 'DNS',
             'source': f'{ip.source_ip}:{udp.source_port}',
             'destination': f'{ip.destination_ip}:{udp.destination_port}',
-            'info': f'Query: {dns.query_name}'
+            'info': f'{msg_type}: {dns.query_name}'
         }
 
     if udp is not None:
@@ -128,6 +130,7 @@ def summarize_packet(layers):
         'info': ''
     }
 
+
 def get_protocol(layers):
 
     for layer in layers:
@@ -137,6 +140,7 @@ def get_protocol(layers):
             return "UDP"
 
     return "OTHER"
+
 
 def matches_filter(layers,protocol_filter,port_filter=None):
 
