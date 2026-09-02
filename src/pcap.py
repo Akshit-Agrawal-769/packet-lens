@@ -240,3 +240,9 @@ def format_dns(data):
     ]
 
     return fields
+
+def get_dns_message_type(flags):
+
+    if flags & 0x8000:
+        return 'RESPONSE'
+    return 'QUERY'

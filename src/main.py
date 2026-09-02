@@ -23,7 +23,8 @@ from models import (
     EthernetFrame, 
     IPv4Packet, 
     UDPSegment, 
-    TCPSegment
+    TCPSegment,
+    DNSMessage
     )
 
 while True:
@@ -218,7 +219,7 @@ while True:
                     elif isinstance(layer, UDPSegment):
                         fields = format_udp(layer)
 
-                    elif type(layer).__name__ == "DNSMessage":
+                    elif isinstance(layer, DNSMessage):
                         fields = format_dns(layer)
 
                     elif isinstance(layer, TCPSegment):
