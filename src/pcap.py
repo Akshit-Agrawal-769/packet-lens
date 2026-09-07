@@ -145,7 +145,7 @@ def format_udp(data):
     return fields
 
 def parse_tcp(data):
-    source_port = int.from_bytes(data[0:2], byteorder="big")
+    source_port = int.from_bytes(data[:2], byteorder="big")
     destination_port = int.from_bytes(data[2:4], byteorder="big")
 
     sequence_number = int.from_bytes(data[4:8], byteorder="big")
@@ -213,7 +213,6 @@ def parse_dns(data):
         qtype=int.from_bytes(data[13+i:15+i], byteorder='big')
         qclass=int.from_bytes(data[15+i:17+i], byteorder='big')
 
-
     return DNSMessage(
         transaction_id,
         flags,
@@ -238,7 +237,6 @@ def format_dns(data):
         ("query type", data.query_type),
         ("query class", data.query_class)
     ]
-
     return fields
 
 def get_dns_message_type(flags):
@@ -246,3 +244,42 @@ def get_dns_message_type(flags):
     if flags & 0x8000:
         return 'RESPONSE'
     return 'QUERY'
+
+def get_dns_records(dns,record,offset=0):
+
+    r_name=[]
+    if record[0] & 0xc0 == 0xc0:
+        pointer=int.from_bytes(record[:2], byteorder='big') & 0x3fff
+        i=pointer
+        while dns[i] != 0:
+            length = dns[i]
+            i += 1
+            r_name.append(dns[i:i+length])
+            i += length
+        offset=2
+
+    else:
+        i = 0
+        while record[i] != 0:
+            length = record[i]
+            i += 1
+            r_name.append(
+                record[i:i+length])
+            i += length
+        offset = i + 1
+
+    r_type = int.from_bytes(record[offset:offset+2], byteorder='big')
+    r_class = int.from_bytes(record[offset+2:offset+4], byteorder='big')
+    r_ttl = int.from_bytes(record[offset+4:offset+8], byteorder='big')
+    rdlength = int.from_bytes(record[offset+8:offset+10], byteorder='big')
+    rdata = record[offset+10:offset+10+rdlength]
+    offset += rdlength+10
+
+    return {
+        "name": '.'.join(r_name),
+        "type": r_type,
+        "class": r_class,
+        "ttl": r_ttl,
+        "rdlength": rdlength,
+        "rdata": rdata,
+        "next_offset": offset}
