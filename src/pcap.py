@@ -213,6 +213,17 @@ def parse_dns(data):
         qtype=int.from_bytes(data[13+i:15+i], byteorder='big')
         qclass=int.from_bytes(data[15+i:17+i], byteorder='big')
 
+    offset = 17 + i
+    records = []
+
+    for _ in range(answers):
+        record = data[offset:]
+        result = get_dns_records(data, record)
+
+        records.append(result)
+
+        offset += result["next_offset"]
+
     return DNSMessage(
         transaction_id,
         flags,
@@ -222,7 +233,8 @@ def parse_dns(data):
         additional_records,
         qname,
         qtype,
-        qclass
+        qclass,
+        records
     )
 
 def format_dns(data):
@@ -235,8 +247,23 @@ def format_dns(data):
         ("additional records", data.additional_records),
         ("query name", data.query_name),
         ("query type", data.query_type),
-        ("query class", data.query_class)
-    ]
+        ("query class", data.query_class)]
+    
+    for i, record in enumerate(data.answer_records, start=1):
+
+        fields.append(
+            (f"answer {i} name", record["name"]))
+        fields.append(
+            (f"answer {i} type", record["type"]))
+        fields.append(
+            (f"answer {i} class", record["class"]))
+        fields.append(
+            (f"answer {i} TTL", record["ttl"]))
+        fields.append(
+            (f"answer {i} rdlength", record["rdlength"]))
+        fields.append(
+            (f"answer {i} rdata", record["rdata"]))
+
     return fields
 
 def get_dns_message_type(flags):
@@ -251,12 +278,18 @@ def get_dns_records(dns,record,offset=0):
     if record[0] & 0xc0 == 0xc0:
         pointer=int.from_bytes(record[:2], byteorder='big') & 0x3fff
         i=pointer
+
         while dns[i] != 0:
-            length = dns[i]
-            i += 1
-            r_name.append(dns[i:i+length])
-            i += length
-        offset=2
+
+            if dns[i] & 0xc0 == 0xc0:
+                pointer=int.from_bytes(dns[i:i+2], byteorder='big') & 0x3fff
+                i=pointer
+            else:
+                length=dns[i]
+                i += 1
+                r_name.append(dns[i:i+length])
+                i += length
+            offset=2
 
     else:
         i = 0
@@ -276,7 +309,7 @@ def get_dns_records(dns,record,offset=0):
     offset += rdlength+10
 
     return {
-        "name": '.'.join(r_name),
+        "name": r_name,
         "type": r_type,
         "class": r_class,
         "ttl": r_ttl,

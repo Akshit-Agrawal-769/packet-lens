@@ -75,3 +75,4 @@ class DNSMessage:
     query_name: str
     query_type: int
     query_class: int
+    answer_records: list
