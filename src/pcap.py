@@ -281,9 +281,10 @@ def get_dns_records(dns,record,offset=0):
 
         while dns[i] != 0:
 
-            if dns[i] & 0xc0 == 0xc0:
+            if dns[i] & 0xc0 == 0xc0: # chained-pointers
                 pointer=int.from_bytes(dns[i:i+2], byteorder='big') & 0x3fff
                 i=pointer
+                
             else:
                 length=dns[i]
                 i += 1
