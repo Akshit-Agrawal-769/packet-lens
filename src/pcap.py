@@ -278,13 +278,19 @@ def get_dns_records(dns,record,offset=0):
     if record[0] & 0xc0 == 0xc0:
         pointer=int.from_bytes(record[:2], byteorder='big') & 0x3fff
         i=pointer
+        MAX_jumps=100
+        jumps=0
 
         while dns[i] != 0:
+
+            if jumps > MAX_jumps:
+                raise ValueError('DNS parser aborted. Too many pointer jumps (possible circular loop).')
 
             if dns[i] & 0xc0 == 0xc0: # chained-pointers
                 pointer=int.from_bytes(dns[i:i+2], byteorder='big') & 0x3fff
                 i=pointer
-                
+                jumps+=1
+
             else:
                 length=dns[i]
                 i += 1
