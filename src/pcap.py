@@ -182,8 +182,8 @@ def format_tcp(data):
         ("checksum", f"0x{data.checksum:04x}"),
         ("urgent pointer", data.urgent_pointer)
     ]
-
     return fields
+
 
 def parse_dns(data):
 
@@ -237,35 +237,6 @@ def parse_dns(data):
         records
     )
 
-def format_dns(data):
-    fields = [
-        ("transaction ID", f"0x{data.transaction_id:04x}"),
-        ("flags", f"0x{data.flags:04x}"),
-        ("questions", data.questions),
-        ("answers", data.answers),
-        ("authority records", data.authority_records),
-        ("additional records", data.additional_records),
-        ("query name", data.query_name),
-        ("query type", data.query_type),
-        ("query class", data.query_class)]
-    
-    for i, record in enumerate(data.answer_records, start=1):
-
-        fields.append(
-            (f"answer {i} name", record["name"]))
-        fields.append(
-            (f"answer {i} type", record["type"]))
-        fields.append(
-            (f"answer {i} class", record["class"]))
-        fields.append(
-            (f"answer {i} TTL", record["ttl"]))
-        fields.append(
-            (f"answer {i} rdlength", record["rdlength"]))
-        fields.append(
-            (f"answer {i} rdata", record["rdata"]))
-
-    return fields
-
 def get_dns_message_type(flags):
 
     if flags & 0x8000:
@@ -296,7 +267,7 @@ def get_dns_records(dns,record,offset=0):
                 i += 1
                 r_name.append(dns[i:i+length])
                 i += length
-            offset=2
+        offset=2
 
     else:
         i = 0
@@ -314,12 +285,47 @@ def get_dns_records(dns,record,offset=0):
     rdlength = int.from_bytes(record[offset+8:offset+10], byteorder='big')
     rdata = record[offset+10:offset+10+rdlength]
     offset += rdlength+10
-
+    
     return {
         "name": r_name,
         "type": r_type,
         "class": r_class,
         "ttl": r_ttl,
         "rdlength": rdlength,
-        "rdata": rdata,
+        "parsed_rdata": parse_dns_rdata(r_type,rdata,dns),
         "next_offset": offset}
+
+def parse_dns_rdata(type,r_data,dns):
+    if type == 1:
+        return '.'.join(str(byte) for byte in r_data)
+    if type == 5:
+        return 
+
+def format_dns(data):
+    fields = [
+        ("transaction ID", f"0x{data.transaction_id:04x}"),
+        ("flags", f"0x{data.flags:04x}"),
+        ("questions", data.questions),
+        ("answers", data.answers),
+        ("authority records", data.authority_records),
+        ("additional records", data.additional_records),
+        ("query name", data.query_name),
+        ("query type", data.query_type),
+        ("query class", data.query_class)]
+    
+    for i, record in enumerate(data.answer_records, start=1):
+
+        fields.append(
+            (f"answer {i} name", record["name"]))
+        fields.append(
+            (f"answer {i} type", record["type"]))
+        fields.append(
+            (f"answer {i} class", record["class"]))
+        fields.append(
+            (f"answer {i} TTL", record["ttl"]))
+        fields.append(
+            (f"answer {i} rdlength", record["rdlength"]))
+        fields.append(
+            (f"answer {i} rdata", record["parsed_rdata"]))
+
+    return fields
