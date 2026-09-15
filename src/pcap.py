@@ -310,6 +310,12 @@ def parse_dns_rdata(type,r_data,dns):
         return '.'.join(str(byte) for byte in r_data)
     if type == 5:
         return pointer_parser(r_data,dns)
+    if type == 28:
+        res=[]
+        for i in range(0,16,2):
+            byte=int.from_bytes(r_data[i:i+2],byteorder='big')
+            res.append(f'{byte:04x}')
+        return ':'.join(res)
     return r_data.hex()
         
 
