@@ -335,16 +335,18 @@ def format_dns(data):
     for i, record in enumerate(data.answer_records, start=1):
 
         fields.append(
-            (f"answer {i} name", record["name"]))
+            (f'answer {i}',''))
         fields.append(
-            (f"answer {i} type", record["type"]))
+            ("  name", record["name"]))
         fields.append(
-            (f"answer {i} class", record["class"]))
+            ("  type", (record["type"], p_constants.DNS_TYPES[record["type"]])))
         fields.append(
-            (f"answer {i} TTL", record["ttl"]))
+            ("  class", record["class"]))
         fields.append(
-            (f"answer {i} rdlength", record["rdlength"]))
+            ("  TTL", record["ttl"]))
         fields.append(
-            (f"answer {i} rdata", record["parsed_rdata"]))
+            ("  rdlength", record["rdlength"]))
+        fields.append(
+            ("  rdata", record["parsed_rdata"]))
 
     return fields

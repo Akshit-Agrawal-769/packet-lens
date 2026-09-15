@@ -16,3 +16,12 @@ LINK_TYPES = {
     1: "Ethernet",
     105: "IEEE 802.11",
 }
+
+DNS_TYPES = {
+    1: "A",
+    2: "NS",
+    5: "CNAME",
+    12: "PTR",
+    15: "MX",
+    28: "AAAA",
+}
