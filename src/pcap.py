@@ -243,30 +243,40 @@ def get_dns_message_type(flags):
         return 'RESPONSE'
     return 'QUERY'
 
+def pointer_parser(record,dns,ans=None):
+
+    if ans is None:
+        ans=[]
+
+    i=0
+    buf=record
+    MAX_jumps=100
+    jumps=0
+
+    while buf[i] != 0:
+
+        if jumps > MAX_jumps:
+            raise ValueError('DNS parser aborted. Too many pointer jumps (possible circular loop).')
+
+        if dns[i] & 0xc0 == 0xc0: # chained-pointers
+            pointer=int.from_bytes(dns[i:i+2], byteorder='big') & 0x3fff
+            i=pointer
+            jumps+=1
+            buf=dns
+
+        else:
+            length=buf[i]
+            i += 1
+            ans.append(buf[i:i+length])
+            i += length
+
+        return ans
+
 def get_dns_records(dns,record,offset=0):
 
     r_name=[]
     if record[0] & 0xc0 == 0xc0:
-        pointer=int.from_bytes(record[:2], byteorder='big') & 0x3fff
-        i=pointer
-        MAX_jumps=100
-        jumps=0
-
-        while dns[i] != 0:
-
-            if jumps > MAX_jumps:
-                raise ValueError('DNS parser aborted. Too many pointer jumps (possible circular loop).')
-
-            if dns[i] & 0xc0 == 0xc0: # chained-pointers
-                pointer=int.from_bytes(dns[i:i+2], byteorder='big') & 0x3fff
-                i=pointer
-                jumps+=1
-
-            else:
-                length=dns[i]
-                i += 1
-                r_name.append(dns[i:i+length])
-                i += length
+        pointer_parser(record,dns,r_name)
         offset=2
 
     else:
@@ -299,7 +309,10 @@ def parse_dns_rdata(type,r_data,dns):
     if type == 1:
         return '.'.join(str(byte) for byte in r_data)
     if type == 5:
-        return 
+        return pointer_parser(r_data,dns)
+    return r_data.hex()
+        
+
 
 def format_dns(data):
     fields = [
