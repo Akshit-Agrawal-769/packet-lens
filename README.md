@@ -21,7 +21,7 @@ So PacketLens is equal parts tool and learning project. If you're a student, a d
 - [x] Decode IPv4 packets
 - [x] Decode TCP segments
 - [x] Decode UDP datagrams
-- [ ] Decode DNS packets
+- [x] Decode DNS packets
 - [ ] Decode HTTP requests/responses
 - [ ] Protocol statistics
 - [x] Packet filtering
