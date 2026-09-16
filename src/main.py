@@ -10,7 +10,8 @@ from pcap import (
     format_ipv4,
     format_udp,
     format_tcp,
-    format_dns
+    format_dns,
+    format_http
 )
 from parser import (
      parse_packet,
@@ -24,7 +25,8 @@ from models import (
     IPv4Packet, 
     UDPSegment, 
     TCPSegment,
-    DNSMessage
+    DNSMessage,
+    HTTPMessage
     )
 
 while True:
@@ -224,6 +226,10 @@ while True:
 
                     elif isinstance(layer, TCPSegment):
                         fields = format_tcp(layer)
+
+                    elif isinstance(layer, HTTPMessage):
+                        fields = format_http(layer)
+                        
                     else:
                         continue
 

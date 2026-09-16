@@ -5,9 +5,10 @@ from pcap import (
     parse_tcp,
     parse_dns,
     get_dns_message_type,
+    parse_http
 )
 
-from models import IPv4Packet, UDPSegment, TCPSegment, DNSMessage
+from models import IPv4Packet, UDPSegment, TCPSegment, DNSMessage, HTTPMessage
 
 
 def parse_packet(data):
@@ -33,6 +34,15 @@ def parse_packet(data):
     if ipv4.protocol == 6:
         tcp = parse_tcp(transport_data)
         layers.append(tcp)
+        # HTTP
+        if tcp.source_port in (80, 8080) or tcp.destination_port in (80, 8080):
+            tcp_header_length = tcp.data_offset * 4
+            tcp_payload = transport_data[tcp_header_length:]
+            
+            if len(tcp_payload) > 0:
+                http = parse_http(tcp_payload)
+                if http:
+                    layers.append(http)
 
     # UDP
     elif ipv4.protocol == 17:
@@ -75,6 +85,7 @@ def summarize_packet(layers):
     tcp = None
     udp = None
     dns = None
+    http = None
 
     for layer in layers:
 
@@ -86,13 +97,23 @@ def summarize_packet(layers):
             udp = layer
         elif isinstance(layer, DNSMessage):
             dns=layer
+        elif isinstance(layer, HTTPMessage):
+            http=layer
 
     if ip is None:
          return {
-            "protocol": "OTHER",
-            "source": "-",
-            "destination": "-",
-            "info": "Unknown Packet"
+            'protocol': 'OTHER',
+            'source': '-',
+            'destination': '-',
+            'info': 'Unknown Packet'
+        }
+
+    if http is not None:
+        return {
+            'protocol': 'HTTP',
+            'source': f'{ip.source_ip}:{tcp.source_port}',
+            'destination': f'{ip.destination_ip}:{tcp.destination_port}',
+            'info': http.first_line
         }
 
     if tcp is not None:

@@ -76,3 +76,10 @@ class DNSMessage:
     query_type: int
     query_class: int
     answer_records: list
+
+@dataclass
+class HTTPMessage:
+    is_request: bool
+    first_line: str
+    headers: dict
+    body_length: int

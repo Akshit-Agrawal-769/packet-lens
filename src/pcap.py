@@ -5,7 +5,8 @@ from models import (
     IPv4Packet, 
     UDPSegment, 
     TCPSegment,
-    DNSMessage
+    DNSMessage,
+    HTTPMessage
     )
 import p_constants
 
@@ -349,4 +350,69 @@ def format_dns(data):
         fields.append(
             ("  rdata", record["parsed_rdata"]))
 
+    return fields
+
+
+
+def parse_http(data):
+
+    header_end = data.find(b"\r\n\r\n")
+
+    if header_end != -1:
+        header_bytes = data[:header_end]
+        body_length = len(data) - (header_end + 4)
+    else:
+        header_bytes = data
+        body_length = 0
+
+    text = header_bytes.decode("iso-8859-1", errors="replace")
+    lines = text.split("\r\n")
+
+    if not lines or not lines[0]:
+        return None
+
+    first_line = lines[0]
+
+    methods = {
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "HEAD",
+        "OPTIONS",
+        "PATCH"
+    }
+
+    first_word = first_line.split(" ", 1)[0]
+    is_request = first_word in methods
+    headers = {}
+
+    for line in lines[1:]:
+        if ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        headers[key.strip().lower()] = value.strip()
+
+    return HTTPMessage(
+        is_request,
+        first_line,
+        headers,
+        body_length
+    )
+    
+
+def format_http(data):
+    fields = [
+        ("Type", "Request" if data.is_request else "Response"),
+        ("Info", data.first_line),
+        ("Headers Count", len(data.headers)),
+        ("Body Length", f"{data.body_length} bytes")
+    ]
+    if "host" in data.headers:
+        fields.append(("Host", data.headers["host"]))
+    if "user-agent" in data.headers:
+        fields.append(("User-Agent", data.headers["user-agent"]))
+    if "content-type" in data.headers:
+        fields.append(("Content-Type", data.headers["content-type"]))
+        
     return fields
