@@ -1,4 +1,4 @@
-Current questions:
+Initial questions:
 
 - How does the receiver know a packet is missing?
 - How long should it wait before assuming the packet is lost?
