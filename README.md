@@ -32,6 +32,5 @@ So PacketLens is equal parts tool and learning project. If you're a student, a d
 
 ```bash
 git clone https://github.com/Akshit-Agrawal-769/packet-lens.git
-cd packetlens
-pip install -r requirements.txt
+cd packet-lens
 ```
