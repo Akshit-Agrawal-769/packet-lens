@@ -111,8 +111,8 @@ def summarize_packet(layers):
     if http is not None:
         return {
             'protocol': 'HTTP',
-            'source': f'{ip.source_ip}:{tcp.source_port}',
-            'destination': f'{ip.destination_ip}:{tcp.destination_port}',
+            'source': f"{ip.source_ip}:{tcp.source_port}",
+            'destination': f"{ip.destination_ip}:{tcp.destination_port}",
             'info': http.first_line
         }
 
@@ -120,27 +120,27 @@ def summarize_packet(layers):
         flag=get_tcp_flags(tcp.flags)
         flag_out=''
         if flag:
-            flag_out=f' [{', '.join(flag)}]'
+            flag_out=f"" [{', '.join(flag)}]"
         return {
             'protocol': 'TCP',
-            'source': f'{ip.source_ip}:{tcp.source_port}',
-            'destination': f'{ip.destination_ip}:{tcp.destination_port}',
-            'info': f'{flag_out}'}
+            'source': f"{ip.source_ip}:{tcp.source_port}",
+            'destination': f"{ip.destination_ip}:{tcp.destination_port}",
+            'info': f"{flag_out}"}
 
     if dns is not None:
         msg_type = get_dns_message_type(dns.flags)
         return {
             'protocol': 'DNS',
-            'source': f'{ip.source_ip}:{udp.source_port}',
-            'destination': f'{ip.destination_ip}:{udp.destination_port}',
-            'info': f'{msg_type}: {dns.query_name}'
+            'source': f"{ip.source_ip}:{udp.source_port}",
+            'destination': f"{ip.destination_ip}:{udp.destination_port}",
+            'info': f"{msg_type}: {dns.query_name}"
         }
 
     if udp is not None:
             return {
                 'protocol': 'UDP',
-                'source': f'{ip.source_ip}:{udp.source_port}',
-                'destination': f'{ip.destination_ip}:{udp.destination_port}',
+                'source': f"{ip.source_ip}:{udp.source_port}",
+                'destination': f"{ip.destination_ip}:{udp.destination_port}",
                 'info': ''
             }
 

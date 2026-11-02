@@ -154,13 +154,13 @@ while True:
 
                     summary = summarize_packet(layers)
                     print(
-                        f'{packet_number:<6}'
-                        f'{timestamp:<18.6f}'
-                        f'{summary['protocol']:<10}'
-                        f'{summary['source']:<25}'
-                        f'{summary['destination']:<25}'
-                        f'{packet.captured_length:<8}'
-                        f'{summary['info']}'
+                        f"{packet_number:<6}"
+                        f"{timestamp:<18.6f}"
+                        f"{summary['protocol']:<10}"
+                        f"{summary['source']:<25}"
+                        f"{summary['destination']:<25}"
+                        f"{packet.captured_length:<8}"
+                        f"{summary['info']}"
                     )
 
                     if p_constants.DEBUG:
