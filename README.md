@@ -22,7 +22,7 @@ So PacketLens is equal parts tool and learning project. If you're a student, a d
 - [x] Decode TCP segments
 - [x] Decode UDP datagrams
 - [x] Decode DNS packets
-- [ ] Decode HTTP requests/responses
+- [x] Decode HTTP requests/responses
 - [ ] Protocol statistics
 - [x] Packet filtering
 - [ ] JSON export
