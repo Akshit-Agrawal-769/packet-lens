@@ -120,7 +120,7 @@ def summarize_packet(layers):
         flag=get_tcp_flags(tcp.flags)
         flag_out=''
         if flag:
-            flag_out=f"" [{', '.join(flag)}]"
+            flag_out=f" [{', '.join(flag)}]"
         return {
             'protocol': 'TCP',
             'source': f"{ip.source_ip}:{tcp.source_port}",
